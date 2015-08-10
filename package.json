@@ -4,6 +4,7 @@
   "description": "Edools theme quality assurance tool",
   "repository": "https://github.com/Edools/bamboo-linter.git",
   "main": "dist/index.js",
+  "preferGlobal": true,
   "scripts": {
     "test": "gulp",
     "test-browser": "gulp test-browser",
