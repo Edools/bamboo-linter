@@ -4,7 +4,8 @@
     "strict": 0,
     "quotes": [2, "single"],
     "no-use-before-define": 0,
-    "consistent-return": 0
+    "consistent-return": 0,
+    "no-process-exit": 0
   },
   "env": {
     "browser": true,

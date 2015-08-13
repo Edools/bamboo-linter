@@ -1,6 +1,6 @@
 {
   "name": "@edools/bamboo-linter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Edools theme quality assurance tool",
   "repository": "https://github.com/Edools/bamboo-linter.git",
   "main": "dist/index.js",

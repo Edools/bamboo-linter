@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {any, forEach} from 'ramda';
-import {Observable, helpers} from 'rx';
+import {Observable} from 'rx';
 import {promisify} from 'bluebird';
 import {error, success} from './utils';
 import {getApps, getAppRelease} from './providers/config';
@@ -47,7 +47,7 @@ export function validateTheme (config) {
     return;
   }
 
-  let source = Observable.fromPromise(getApps(config.appfileDir))
+  Observable.fromPromise(getApps(config.appfileDir))
     .flatMap(apps => Observable.from(apps))
     .filter(({name}) => name !== 'bamboo')
     .flatMap(app => Observable.fromPromise(getAppRelease(app)))
@@ -57,19 +57,14 @@ export function validateTheme (config) {
       templates = templates.concat(template);
       return templates;
     }, [])
-    .map(templates => {
+    .subscribe(templates => {
       let hasAnyMessage = any(({messages}) => messages.length > 0, templates);
       if (hasAnyMessage) {
         forEach(({name, messages}) => consoleReporter(name, messages), templates);
-        throw new Error('Your theme isn\'t valid');
+        error('Your theme isn\'t valid');
+        process.exit(1);
       } else {
         success('Your theme is valid!');
       }
-    })
-    .catch(err => {
-      error(err);
-      return Observable.just();
     });
-
-  source.subscribe(helpers.noop);
 }
