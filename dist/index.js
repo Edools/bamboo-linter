@@ -203,7 +203,7 @@ function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else i
       return;
     }
 
-    rx.Observable.fromPromise(getApps(config.appfileDir)).flatMap(function (apps) {
+    var source = rx.Observable.fromPromise(getApps(config.appfileDir)).flatMap(function (apps) {
       return rx.Observable.from(apps);
     }).filter(function (_ref6) {
       var name = _ref6.name;
@@ -217,7 +217,7 @@ function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else i
     }).reduce(function (templates, template) {
       templates = templates.concat(template);
       return templates;
-    }, []).subscribe(function (templates) {
+    }, []).map(function (templates) {
       var hasAnyMessage = R.any(function (_ref7) {
         var messages = _ref7.messages;
         return messages.length > 0;
@@ -228,10 +228,16 @@ function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else i
           var messages = _ref8.messages;
           return console__default(name, messages);
         }, templates);
+        throw new Error('Your theme isn\'t valid');
       } else {
         utils__success('Your theme is valid!');
       }
+    })['catch'](function (err) {
+      utils__error(err);
+      return rx.Observable.just();
     });
+
+    source.subscribe(rx.helpers.noop);
   }
 
   exports.validateTheme = validateTheme;
